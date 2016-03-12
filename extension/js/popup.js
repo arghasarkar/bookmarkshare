@@ -1,7 +1,7 @@
 /**
  * Created by arghasarkar on 12/03/2016.
  */
-
+hideButton();
 function hideButton() {
 	$("#leaveButton").hide();
 	$("#joinButton").click(function() {
