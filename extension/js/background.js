@@ -1,5 +1,5 @@
 // URL of the backend server
-var serverUrl = "http://5600b1a2.ngrok.io";
+var serverUrl = "http://5a14059e.ngrok.io";
 
 chrome.contextMenus.create({
     'title': 'Share this URL',
