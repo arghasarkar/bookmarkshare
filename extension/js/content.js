@@ -6,7 +6,7 @@ function getCurrentURL() {
      *  Returns the URL of the page, the user is on.
      */
 
-    return window.location.hostname;
+    return window.location.href;
 }
 
 function mp() {
