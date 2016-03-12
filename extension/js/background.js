@@ -32,9 +32,17 @@ function sendPostRequest(path, params, method) {
     form.submit();
 }
 
+
+
 function onClickShareLinkHandler(info) {
     /**
      *  Code will go here for sending a request to the backend server containing the URL.
      */
+    // Sending message to the content script
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {getURL: "true"}, function (response) {
+            console.log("Response: " + response);
+        });
+    });
 }
 

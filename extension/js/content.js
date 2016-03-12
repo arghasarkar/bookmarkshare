@@ -1,5 +1,5 @@
 // Runs the Message Passing
-setInterval(mp, 1000);
+mp();
 
 function getCurrentURL() {
     /**
@@ -19,6 +19,14 @@ function mp() {
         /*
         Work will be down here. 
          */
+        function(request, sender, sendResponse) {
+
+            if (request.getURL) {
+                var currentURL = getCurrentURL();
+                console.log("URL: " + currentURL);
+                sendResponse({currentURL: currentURL});
+            }
+        }
     );
 
 }
