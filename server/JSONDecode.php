@@ -12,6 +12,16 @@
 
   // If join status is true, add person.
   if ($join_status == "true") {
+    $query = "SELECT GroupName FROM previous_groups 
+              WHERE GroupName = '$group_name' AND Username = '$username'";
+    $queryResult = mysqli_query($connection, $query);
+    $rowArray = mysqli_fetch_array($queryResult);
+
+    if(empty($rowArray)) {
+      $query = "INSERT INTO `previous_groups`(`GroupName`, `Username`) VALUES ('$group_name', '$username')";
+      $queryResult = mysqli_query($connection, $query);
+    } // if   
+    
     // Check if there is another group with the same name.
     $query = "SELECT GroupName FROM groups 
               WHERE GroupName = '$group_name'";
