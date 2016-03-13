@@ -2,7 +2,7 @@
  * Created by arghasarkar on 12/03/2016.
  */
 // URL of the server
-var serverURL = "http://027bfe49.ngrok.io/URLShare/JSONDecode.php?";
+var serverURL = "http://b7a902cf.ngrok.io/URLShare/JSONDecode.php?";
 
 // For hiding the button.
 hideButton();

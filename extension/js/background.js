@@ -1,5 +1,6 @@
 // URL of the backend server
-var serverUrl = "http://027bfe49.ngrok.io";
+var serverUrl = "http://b7a902cf.ngrok.io/URLShare/sendurl.php?";
+//http://b7a902cf.ngrok.io/URLShare/sendurl.php?groupname=brumhack&username=alex&url=http://facebook.com
 
 chrome.contextMenus.create({
     'title': 'Share this URL',
@@ -7,11 +8,11 @@ chrome.contextMenus.create({
     'onclick': onClickShareLinkHandler
 });
 
-function sendPostRequest(path, params, method) {
+function sendRequest(path, params, method) {
     /*
-     * Will send a POST request to the backend server.
+     * Will send a GET / POST request to the backend server.
      */
-    method = method || "post";
+    method = method || "";
 
     var form = document.createElement("form");
     form.setAttribute("method", method);
@@ -32,7 +33,11 @@ function sendPostRequest(path, params, method) {
     form.submit();
 }
 
-
+function sendGetRequest(path) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", path, true);
+    xhttp.send();
+}
 
 function onClickShareLinkHandler(info) {
     /**
@@ -41,7 +46,20 @@ function onClickShareLinkHandler(info) {
     // Sending message to the content script
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {getURL: "true"}, function (response) {
-            console.log("Response: " + response);
+
+            /*
+                The URL to be shared has been received. Time to send a request to the database.
+             */
+            /*var params = {
+                "groupname":"brumhack",
+                "username":"arghaTest",
+                "url":"http://facebook.com"
+            };*/
+            var newRequestUrl = serverUrl + "groupname=brumhack&username=alexTest&url=http://facebook.com";
+
+            sendGetRequest(newRequestUrl);
+            console.log("Response: " + response.currentURL);
+
         });
     });
 }
