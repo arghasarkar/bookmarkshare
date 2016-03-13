@@ -6,6 +6,8 @@ var serverURL = "http://b7a902cf.ngrok.io/URLShare/JSONDecode.php?";
 
 // For hiding the button.
 hideButton();
+// Activating the message passing listener
+mp();
 
 function hideButton() {
 	$("#leaveButton").hide();
@@ -76,5 +78,32 @@ function loadTextFileAjaxSync(filePath, mimeType) {
 	}
 }
 
+/**
+ * Adding the message passing interface
+ */
+function mp() {
+	/*
+	 1) Would listen for a request to send a link.
+	 2) Would reply to the current URL of the page the user is on.
+	 */
 
+	chrome.runtime.onMessage.addListener(
+		/*
+		 Work will be down here.
+		 */
+		function(request, sender, sendResponse) {
+
+			if (request.getNames) {
+				var username = document.getElementById("nameField").value;
+				var groupname = document.getElementById("groupField").value;
+
+				var responseString = "groupname=" + groupname + "&username=" + username;
+				console.log("GROUP DETAILS: " + responseString);
+				sendResponse({nameDetails: responseString});
+
+			}
+		}
+	);
+
+}
 

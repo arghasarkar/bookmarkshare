@@ -48,17 +48,20 @@ function onClickShareLinkHandler(info) {
         chrome.tabs.sendMessage(tabs[0].id, {getURL: "true"}, function (response) {
 
             /*
-                The URL to be shared has been received. Time to send a request to the database.
+                CODE WILL GO HERE TO GET THE GROUP NAME AND THE USER NAME
              */
-            /*var params = {
-                "groupname":"brumhack",
-                "username":"arghaTest",
-                "url":"http://facebook.com"
-            };*/
+            var queryString = "";
+            chrome.extension.sendMessage({getNames: "true"}, function (responseString) {
+                queryString = responseString;
+            });
+            /*
+             The DETAILS has been received. Time to send a request to the database.
+             */
             var newRequestUrl = serverUrl + "groupname=brumhack&username=alexTest&url=http://facebook.com";
-
+            //var newRequestUrl = serverUrl + queryString;
+            console.log("ResponseQ: " + newRequestUrl);
             sendGetRequest(newRequestUrl);
-            console.log("Response: " + response.currentURL);
+
 
         });
     });
