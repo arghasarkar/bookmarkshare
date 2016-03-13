@@ -8,7 +8,6 @@ var serverURL = "http://027bfe49.ngrok.io/URLShare/JSONDecode.php?";
 hideButton();
 
 function hideButton() {
-	// Hides the button on load
 	$("#leaveButton").hide();
 	$("#joinButton").click(function() {
 

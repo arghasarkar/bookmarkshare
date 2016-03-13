@@ -39,8 +39,6 @@
 		<div class="row">
 		  <div class="col-xs-6"><h3>Group: <span class="label label-default"></span></h3></div>
 		  <div class="col-xs-6"><button id="joinButton" type="button" class="btn btn-info">Join</button><button id="leaveButton" type="button" class="btn btn-primary">Leave</button></div>
-		  <!---->
-
 		</div>
 
 
@@ -49,28 +47,26 @@
 	    <td>#</td>
 	    <td>Sender</td>
 	    <td>URL</td>
-	    <td>Action</td>
+	    <td>Copy</td>
 	  </tr>
 	  <tr>
 	    <td>1.</td>
 	    <td>Jackson</td>
-	    <td>http://www.google.csom</td>
-	    <td><button type="button" class="btn btn-success">Visit</button></td>
-	  </tr>
-	  <tr>
-	    <td>1.</td>
-	    <td>Jackson</td>
-	    <td>http://www.google.com</td>
-	    <td><button type="button" class="btn btn-success">Visit</button></td>
+	    <td><input id="foo" value="http://www.google.com"></td>
+	    <td>
+	    	<button class="btn" data-clipboard-target="#foo"><img src="img/clippy.png" style="width:15px;height:15px"; alt="Copy to clipboard"></button>
+	    </td>
 	  </tr>
 	</table>
 
-	
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+	<script src="dist/clipboard.min.js"></script>    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
 	<script src="js/popup.js"></script>
+
+	<script src="js/copyToClipboard.js"></script>
 
   </body>
 </html>
