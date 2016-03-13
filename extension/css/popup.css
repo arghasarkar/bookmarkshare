@@ -1,8 +1,12 @@
 
 body {
-    background-image: url("extension/img/backgr.jpg");
+    background-color: #ebebe0;
+    background-size: 500px 500px;
     padding: 15px 15px 15px 15px;
+    height: 500px;
+    width: 500px;
 }
-#input-name {
+#inout-username, #input-groupname {
+	padding-top: 15px;
 	padding-bottom: 15px;
 }
