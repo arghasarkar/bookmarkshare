@@ -3,6 +3,7 @@
  */
 hideButton();
 function hideButton() {
+	document.getElementById("foo").disabled = true;
 	$("#leaveButton").hide();
 	$("#joinButton").click(function() {
 	$("#leaveButton").show();
