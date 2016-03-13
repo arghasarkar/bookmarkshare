@@ -4,84 +4,116 @@
   $connection = mysqli_connect($database_host, $database_user, $database_pass, $database_name);
   if($connection -> connect_error) {
     die('Connect Error ' . $connection -> connect_errno . ' ' . $connection -> connect_error);
-  }
+  } // if
   
-  $username = $_GET['username'];
-  $groupname = $_GET['groupname'];
+  $group_name = $_GET['groupname'];
+  $username = $_GET['username'];  
   $join_status = $_GET['join_status'];
-  
+
   // If join status is true, add person.
   if ($join_status == "true") {
     // Check if there is another group with the same name.
     $query = "SELECT GroupName FROM groups 
-              WHERE groups.GroupName = '$group_name'";
+              WHERE GroupName = '$group_name'";
     $queryResult = mysqli_query($connection, $query);
     $rowArray = mysqli_fetch_array($queryResult);
 
     // If not, insert in both tables.
     if(empty($rowArray)) {
-      $query = "INSERT INTO groups VALUES ('$group_name')";
+      $query = "INSERT INTO `groups`(`GroupName`) VALUES ('$group_name')";
       $queryResult = mysqli_query($connection, $query);
       
-      $query = "INSERT INTO users VALUES ('$username', '$group_name')";
+      $query = "INSERT INTO `users`(`GroupName`, `Username`) VALUES ('$group_name', '$username')";
       $queryResult = mysqli_query($connection, $query);
-    }
+      
+      echo "join";
+    } // if
     
-    // Else check if there is a group with the same user in.
+    // Else check if there is a group with the same user in,
+    // if not, add him.
     else {
       $query = "SELECT GroupName FROM users 
-                WHERE users.GroupName = '$group_name' AND users.Username = '$username'";
+                WHERE GroupName = '$group_name' AND Username = '$username'";
+                
       $queryResult = mysqli_query($connection, $query);
       $rowArray = mysqli_fetch_array($queryResult);
       
-      // If not, insert.
+      // Insert username.
       if(empty($rowArray)) {
-        $query = "INSERT INTO users VALUES ('$username', '$group_name')";
+        $query = "INSERT INTO `users`(`GroupName`, `Username`) VALUES ('$group_name', '$username')";
         $queryResult = mysqli_query($connection, $query);
-      }
+        
+        echo "join";
+      } // if
       
       // Else, go to the wrong input page.
       else {
-        header("Location: wrongInput.php");
-      }
-    }
+        echo "Wrong input, username might already be in the group.";
+      } // else
+      
+    } // else
    
     // Close connection.
     mysqli_close($connection);  
-  }
+    
+    exit;
+  } // if
   
   // Else remove him.
   else if($join_status == "false") {
-    // Look for the group in the users table
+    // Look for the group in the users table.
     $query = "SELECT GroupName FROM users 
-              WHERE users.GroupName = '$group_name'";
+              WHERE GroupName = '$group_name'";
     $queryResult = mysqli_query($connection, $query);
     $rowArray = mysqli_fetch_array($queryResult);
 
-    // If no group in the table => wrong input
+    // If no group in the table => wrong input.
     if(empty($rowArray)) {
-      header("Location: wrongInput.php");
-    }
+      echo "Wrong input, the group name might be wrong.";
+    } // if
     
-    // Else delete row from the table
+    // Else delete row from the table.
     else {
-      $query = "DELETE FROM users 
-                WHERE users.Username = '$username' AND users.GroupName = '$group_name'";
-      $queryResult = mysqli_query($connection, $query);
-      
-      // If no more users in the group, delete the group altogether.
       $query = "SELECT GroupName FROM users 
-              WHERE users.GroupName = '$group_name'";
-      $queryResult = mysqli_query($connection, $query);
+        WHERE GroupName = '$group_name' AND Username = '$username'";
+      $queryResult = mysqli_query($connection, $query);  
       $rowArray = mysqli_fetch_array($queryResult);
-      
+
       if (empty($rowArray)) {
-        $query = "DELETE FROM groups 
-                  WHERE groups.GroupName = '$group_name'";
+        echo "Wrong input, username - group combination might not exist";
+      } // if
+      
+      else {
+        $query = "DELETE FROM users 
+                  WHERE Username = '$username' AND GroupName = '$group_name'";
         $queryResult = mysqli_query($connection, $query);
-      }
-    }
-  }
+        
+        echo "left";
+        
+        // If no more users in the group, delete the group altogether.
+        $query = "SELECT GroupName FROM users 
+                WHERE GroupName = '$group_name'";
+        $queryResult = mysqli_query($connection, $query);
+        $rowArray = mysqli_fetch_array($queryResult);
+        
+        if (empty($rowArray)) {
+          $query = "DELETE FROM groups 
+                    WHERE GroupName = '$group_name'";
+          $queryResult = mysqli_query($connection, $query);
+        } // if 
+      } // else
+    } // else
+    
+    // Close connection.
+    mysqli_close($connection);
+    
+    exit;
+  } // else if
+  
+  // If join_status is not true or false, give wrong input.
+  else {
+    echo "Wrong input, join_status might be wrong.";
+  } // else
   
   exit;
   
