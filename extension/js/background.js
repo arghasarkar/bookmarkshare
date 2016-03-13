@@ -1,5 +1,6 @@
 // URL of the backend server
 var serverUrl = "http://027bfe49.ngrok.io";
+//http://027bfe49.ngrok.io/URLShare/sendurl.php?groupname=brumhack&username=alex&url=http://facebook.com
 
 chrome.contextMenus.create({
     'title': 'Share this URL',
@@ -31,8 +32,6 @@ function sendPostRequest(path, params, method) {
     document.body.appendChild(form);
     form.submit();
 }
-
-
 
 function onClickShareLinkHandler(info) {
     /**
