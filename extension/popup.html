@@ -1,72 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+	<head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>URL Share</title>
+		<title>URL Share</title>
 
-    <!-- Bootstrap -->
-    <link href="css/popup.css" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+		<!-- Bootstrap -->
+		<link href="css/popup.css" rel="stylesheet">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
+	</head>
+	<body>
 
-	<div class="row">
-	  <div class="col-xs-6"><img src="img/logo-64.png" alt="Logo" style="width:50px;height:50px;"></div>
-	  <div class="col-xs-6"><h1>URL Share</h1></div>
-	</div>
-	</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<img src="img/logo-64.png" alt="Logo" style="width:50px;height:50px;">
+			</div>
+			<div class="col-xs-6">
+				<h1>URL Share</h1>
+			</div>
+		</div>
 
 		<hr>
 		<div class="input-group input-group-sm" id="input-username">
-		  <span class="input-group-addon" id="sizing-addon3">User:</span>
-		  <input id="nameField" type="text" class="form-control" placeholder="Insert your name here" aria-describedby="sizing-addon3">
+			<span class="input-group-addon inputDescription" id="sizing-addon3">&nbsp;&nbsp;User:</span>
+			<input id="nameField" type="text" class="form-control inputDescription" placeholder="Insert your name here" aria-describedby="sizing-addon3" />
 		</div>
 		<div class="input-group input-group-sm" id="input-groupname">
-		  <span class="input-group-addon" id="sizing-addon3">Group:</span>
-		  <input id="groupField" type="text" class="form-control" placeholder="Insert the group name here" aria-describedby="sizing-addon3">
+			<span class="input-group-addon" id="sizing-addon3">Group:</span>
+			<input id="groupField" type="text" class="form-control" placeholder="Insert the group name here" aria-describedby="sizing-addon3" />
 		</div>
 		<div class="row">
-		  <div class="col-xs-6"><h3>Group: <span class="label label-default"></span></h3></div>
-		  <div class="col-xs-6"><button id="joinButton" type="button" class="btn btn-info">Join</button><button id="leaveButton" type="button" class="btn btn-primary">Leave</button></div>
+			<div class="col-xs-6">
+				<h3>Group: <span class="label label-default"></span></h3>
+			</div>
+			<div class="col-xs-6">
+				<button id="joinButton" type="button" class="btn btn-info">Join</button>
+				<button id="leaveButton" type="button" class="btn btn-primary">Leave</button>
+			</div>
 		</div>
 
 
-	<table class="table table-striped">
-	  <tr>
-	    <td>#</td>
-	    <td>Sender</td>
-	    <td>URL</td>
-	    <td>Copy</td>
-	  </tr>
-	  <tr>
-	    <td>1.</td>
-	    <td>Jackson</td>
-	    <td><input style="width:290px" id="foo" value="http://www.google.com"></td>
-	    <td>
-	    	<button class="btn" data-clipboard-target="#foo"><img src="img/clippy.png" style="width:15px;height:15px"; alt="Copy to clipboard"></button>
-	    </td>
-	  </tr>
-	</table>
+		<table class="table table-striped">
+			<tr>
+				<td>#</td>
+				<td>Sender</td>
+				<td>URL</td>
+				<td>Copy</td>
+			</tr>
+			<!--<tr>
+				<td>1.</td>
+				<td>Jackson</td>
+				<td><input style="width:290px" id="foo" value="http://www.google.com"></td>
+				<td>
+				<button class="btn" data-clipboard-target="#foo"><img src="img/clippy.png" style="width:15px;height:15px"; alt="Copy to clipboard"></button>
+				</td>
+			</tr>-->
+		</table>
 
+		<!-- Clipboard JS Library -->
+		<script src="dist/clipboard.min.js"></script>
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="js/jquery.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="js/bootstrap.min.js"></script>
 
-	<script src="dist/clipboard.min.js"></script>    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-	<script src="js/popup.js"></script>
+		<!-- Custom JS for this file -->
+		<script src="js/popup.js"></script>
 
-	<script src="js/copyToClipboard.js"></script>
+	</body>
 
-  </body>
 </html>
