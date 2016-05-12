@@ -2,7 +2,7 @@
  * Created by arghasarkar on 12/03/2016.
  */
 // URL of the server
-var serverURL = "http://b7a902cf.ngrok.io/URLShare/JSONDecode.php?";
+var serverURL = "http://getcouper.com:8000/";
 
 // For hiding the button.
 hideButton();
@@ -134,8 +134,25 @@ var pusher = new Pusher('a7fdcaa3c67e836a3fcc', {
 });
 
 var channel = pusher.subscribe('test_channel');
-channel.bind('newurl', function(data) {
-	alert(data.message);
-	console.log("message");
+channel.bind('newurl', function(bookMark) {
+	// TODO: Code will go here to update the list of new bookMarks
+	newBookMark(bookMark.title, bookMark.url, bookMark.name);
 });
 
+/**
+ * Adding a new bookmark to the extension list
+ */
+function newBookMark(title, url, name) {
+	var table = document.getElementById("bookMarkTable");
+	var row = table.insertRow(1);
+
+	var cellNum = row.insertCell(0);
+	var cellSender = row.insertCell(1);
+	var cellURL = row.insertCell(2);
+	var cellCPButton = row.insertCell(3);
+
+	cellNum.innerHTML = "X";
+	cellSender.appendChild(document.createTextNode(name));
+	cellURL.appendChild(document.createTextNode(url));
+	cellCPButton.innerHTML = "<button class='btn' data-clipboard-target='#foo'><img src='img/clippy.png' style='width:15px;height:15px;' alt='Copy to clipboard'></button>";
+}
