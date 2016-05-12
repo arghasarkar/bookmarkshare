@@ -122,4 +122,20 @@ function copyToClipboard() {
 	});
 }
 
+/**
+ * Using the Pusher API to provide realtime updates
+ */
+// Enable pusher logging - don't include this in production
+//Pusher.logToConsole = true;
+
+var pusher = new Pusher('a7fdcaa3c67e836a3fcc', {
+	cluster: 'eu',
+	encrypted: true
+});
+
+var channel = pusher.subscribe('test_channel');
+channel.bind('newurl', function(data) {
+	alert(data.message);
+	console.log("message");
+});
 
