@@ -18,11 +18,13 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://*.pusher.com; object-src 'self'",
 
   "permissions": [
-    "https://*.pusher.com/*",
+
     "contextMenus",
     "activeTab",
     "webRequest",
+    "storage",
 
+    "https://*.pusher.com/*",
     "*://pusher.com/*",
     "*://*.pusher.com/"
   ],
