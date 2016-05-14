@@ -125,8 +125,6 @@ function copyToClipboard() {
 /**
  * Using the Pusher API to provide realtime updates
  */
-// Enable pusher logging - don't include this in production
-//Pusher.logToConsole = true;
 
 var pusher = new Pusher('a7fdcaa3c67e836a3fcc', {
 	cluster: 'eu',
@@ -155,4 +153,27 @@ function newBookMark(title, url, name) {
 	cellSender.appendChild(document.createTextNode(name));
 	cellURL.appendChild(document.createTextNode(url));
 	cellCPButton.innerHTML = "<button class='btn' data-clipboard-target='#foo'><img src='img/clippy.png' style='width:15px;height:15px;' alt='Copy to clipboard'></button>";
+}
+
+/**
+ * Store the Name and the Group of the user's bookmark.
+ * Uses chrome's storage.sync API
+ * This data will be stored when the user join's a new group
+ */
+function storeCredentials() {
+    var credentials = getCredentials();
+    var userName = credentials.userName;
+    var groupName = credentials.groupName;
+}
+
+/**
+ * Gets the user's Name and the Group's name.
+ */
+function getCredentials() {
+    var credentials = [];
+
+    credentials.userName = document.getElementById("nameField");
+    credentials.groupName = document.getElementById("groupField");
+    
+    return credentials;
 }
