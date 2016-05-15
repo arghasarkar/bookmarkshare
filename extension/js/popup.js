@@ -28,6 +28,13 @@ function hideButton() {
 
 		$("#leaveButton").show();
 		$("#joinButton").hide();
+
+        // Store the credentials in chrome's local storage
+        storeCredentials();
+
+        // Loads the stored credentials
+        loadCredentials();
+
 		document.getElementById("nameField").disabled = true;
 		document.getElementById("groupField").disabled = true;
 
@@ -110,6 +117,7 @@ function mp() {
 /**
  * Provides the Copy To Clipboard functionality
  */
+/*
 copyToClipboard();
 function copyToClipboard() {
 
@@ -121,6 +129,7 @@ function copyToClipboard() {
 		console.log(e);
 	});
 }
+*/
 
 /**
  * Using the Pusher API to provide realtime updates
@@ -161,19 +170,36 @@ function newBookMark(title, url, name) {
  * This data will be stored when the user join's a new group
  */
 function storeCredentials() {
-    var credentials = getCredentials();
+    var credentials = getCredentialsFromInput();
     var userName = credentials.userName;
     var groupName = credentials.groupName;
-}
 
+    if (userName && groupName) {
+        chrome.storage.sync.set({"credentials" : credentials}, function() {
+            console.log("The credentials has been saved.\n" + credentials);
+        });
+    } else {
+        console.log("Invalid group or user name");
+    }
+
+}
 /**
- * Gets the user's Name and the Group's name.
+ * Gets the user's Name and the Group's name from the user <input>
  */
-function getCredentials() {
+function getCredentialsFromInput() {
     var credentials = [];
 
-    credentials.userName = document.getElementById("nameField");
-    credentials.groupName = document.getElementById("groupField");
-    
+    credentials.userName = document.getElementById("nameField").value;
+    credentials.groupName = document.getElementById("groupField").value;
+
     return credentials;
+}
+/**
+ * Retrieves the stored credentials from Chrome's storage.
+ * Use for persistent data storage.
+ */
+function loadCredentials() {
+    chrome.storage.sync.get("credentials", function(credentials) {
+        console.log(credentials);
+    });
 }
