@@ -29,12 +29,6 @@ function hideButton() {
 		$("#leaveButton").show();
 		$("#joinButton").hide();
 
-        // Store the credentials in chrome's local storage
-        storeCredentials();
-
-        // Loads the stored credentials
-        loadCredentials();
-
 		document.getElementById("nameField").disabled = true;
 		document.getElementById("groupField").disabled = true;
 
@@ -62,6 +56,8 @@ function hideButton() {
 		document.getElementById("groupField").disabled = false;
 
 	});
+
+    // Checking if a value has been set already. 
 }
 
 /*
@@ -171,12 +167,14 @@ function newBookMark(title, url, name) {
  */
 function storeCredentials() {
     var credentials = getCredentialsFromInput();
-    var userName = credentials.userName;
-    var groupName = credentials.groupName;
+    console.log(credentials.groupName + " - " + credentials.userName);
 
-    if (userName && groupName) {
-        chrome.storage.sync.set({"credentials" : credentials}, function() {
-            console.log("The credentials has been saved.\n" + credentials);
+    if (credentials.userName && credentials.groupName) {
+        chrome.storage.local.set({"userName" : credentials.userName}, function() {
+            console.log("The username has been saved.\n" + credentials.userName);
+        });
+        chrome.storage.local.set({"groupName" : credentials.groupName}, function() {
+            console.log("The groupname has been saved. \n" + credentials.groupName);
         });
     } else {
         console.log("Invalid group or user name");
@@ -199,7 +197,13 @@ function getCredentialsFromInput() {
  * Use for persistent data storage.
  */
 function loadCredentials() {
-    chrome.storage.sync.get("credentials", function(credentials) {
-        console.log(credentials);
+    var credentials = [];
+    chrome.storage.local.get("userName", function(userName) {
+        credentials.userName = userName;
+        console.log(userName.userName);
+    });
+    chrome.storage.local.get("groupName", function(groupName) {
+        credentials.groupName = groupName;
+        console.log(groupName.groupName)
     });
 }
