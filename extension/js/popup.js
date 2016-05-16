@@ -29,6 +29,9 @@ function hideButton() {
 		$("#leaveButton").show();
 		$("#joinButton").hide();
 
+        // Updating the credentials
+        storeCredentials();
+
 		document.getElementById("nameField").disabled = true;
 		document.getElementById("groupField").disabled = true;
 
@@ -57,7 +60,8 @@ function hideButton() {
 
 	});
 
-    // Checking if a value has been set already. 
+    // Checking if a value has been set already.
+    autoJoinChannel();
 }
 
 /*
@@ -200,10 +204,20 @@ function loadCredentials() {
     var credentials = [];
     chrome.storage.local.get("userName", function(userName) {
         credentials.userName = userName;
-        console.log(userName.userName);
+        //console.log(userName.userName);
     });
     chrome.storage.local.get("groupName", function(groupName) {
         credentials.groupName = groupName;
-        console.log(groupName.groupName)
+        //console.log(groupName.groupName)
     });
+    return credentials;
+}
+
+/**
+ * Check if a value exists in the local storage for a name and a group. If it does, use those credentials to auto-login
+ * when the extension loads up
+ */
+function autoJoinChannel() {
+    var credentials = loadCredentials();
+    console.log(credentials);
 }
