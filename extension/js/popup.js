@@ -1,8 +1,19 @@
 /**
  * Created by arghasarkar on 12/03/2016.
  */
+
+/**
+ *
+ * Global variables and constants are stored here.
+ */
 // URL of the server
 var serverURL = "http://getcouper.com:8000/";
+// The username and the group name fields
+var inputUserNameId = "nameField";
+var inputGroupNameId = "groupField";
+// The associative key for userName and groupField
+var keyUserName = "userName";
+var keyGroupName = "groupName";
 
 // For hiding the button.
 hideButton();
@@ -17,8 +28,8 @@ function hideButton() {
 			Code will go here to send request to the server to join the group share
 		 */
 
-		var username = document.getElementById("nameField").value;
-		var groupname = document.getElementById("groupField").value;
+		var username = document.getElementById(inputUserNameId).value;
+		var groupname = document.getElementById(inputGroupNameId).value;
 
 		// Building the query string
 		var queryString = "groupname=" + groupname + "&username=" + username + "&join_status=true";
@@ -32,8 +43,8 @@ function hideButton() {
         // Updating the credentials
         storeCredentials();
 
-		document.getElementById("nameField").disabled = true;
-		document.getElementById("groupField").disabled = true;
+		document.getElementById(inputUserNameId).disabled = true;
+		document.getElementById(inputGroupNameId).disabled = true;
 
 	});
 
@@ -55,8 +66,8 @@ function hideButton() {
 
 		$("#joinButton").show();
 		$("#leaveButton").hide();
-		document.getElementById("nameField").disabled = false;
-		document.getElementById("groupField").disabled = false;
+		document.getElementById(inputUserNameId).disabled = false;
+		document.getElementById(inputGroupNameId).disabled = false;
 
 	});
 
@@ -174,10 +185,10 @@ function storeCredentials() {
     console.log(credentials.groupName + " - " + credentials.userName);
 
     if (credentials.userName && credentials.groupName) {
-        chrome.storage.local.set({"userName" : credentials.userName}, function() {
+        chrome.storage.sync.set({"userName" : credentials.userName}, function() {
             console.log("The username has been saved.\n" + credentials.userName);
         });
-        chrome.storage.local.set({"groupName" : credentials.groupName}, function() {
+        chrome.storage.sync.set({"groupName" : credentials.groupName}, function() {
             console.log("The groupname has been saved. \n" + credentials.groupName);
         });
     } else {
@@ -191,8 +202,8 @@ function storeCredentials() {
 function getCredentialsFromInput() {
     var credentials = [];
 
-    credentials.userName = document.getElementById("nameField").value;
-    credentials.groupName = document.getElementById("groupField").value;
+    credentials.userName = document.getElementById(inputUserNameId).value;
+    credentials.groupName = document.getElementById(inputGroupNameId).value;
 
     return credentials;
 }
@@ -202,12 +213,12 @@ function getCredentialsFromInput() {
  */
 function loadCredentials() {
     var credentials = [];
-    chrome.storage.local.get("userName", function(userName) {
-        credentials.userName = userName;
+    chrome.storage.sync.get("userName", function(userName) {
+        credentials['userName'] = userName.userName;
         //console.log(userName.userName);
     });
-    chrome.storage.local.get("groupName", function(groupName) {
-        credentials.groupName = groupName;
+    chrome.storage.sync.get("groupName", function(groupName) {
+        credentials['groupName'] = groupName.groupName;
         //console.log(groupName.groupName)
     });
     return credentials;
@@ -220,4 +231,19 @@ function loadCredentials() {
 function autoJoinChannel() {
     var credentials = loadCredentials();
     console.log(credentials);
+
+    var groupName = credentials[0].groupName;
+    var userName = credentials.userName;
+    //if (credentials.groupName != null && credentials.userName != null) {
+        // Checking they are not empty
+        console.log(userName + " -- " + groupName);
+        if (userName.length > 0 & userName.length > 0 ) {
+            // There are credentials stored. Update the fields.
+            document.getElementById(inputUserName).value = credentials.userName;
+            document.getElementById(inputGroupName).value = credentials.groupName;
+
+            console.log("WORKING");
+        }
+   // }
+
 }
