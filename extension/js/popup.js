@@ -14,6 +14,8 @@ var inputGroupNameId = "groupField";
 // The associative key for userName and groupField
 var keyUserName = "userName";
 var keyGroupName = "groupName";
+// The timeout for loading the credentials from chrome's storage API
+var TIMEOUT_LOAD_CREDENTIALS = 100;
 
 // For hiding the button.
 hideButton();
@@ -221,7 +223,7 @@ function loadCredentials() {
         credentials.groupName = groupName.groupName;
         //console.log(groupName.groupName)
     });
-    console.log(credentials);
+
     return credentials;
 }
 
@@ -231,20 +233,22 @@ function loadCredentials() {
  */
 function autoJoinChannel() {
     var credentials = loadCredentials();
-    console.log(credentials);
 
-    var groupName = credentials.groupName;
-    var userName = credentials.userName;
-    //if (credentials.groupName != null && credentials.userName != null) {
-        // Checking they are not empty
-        console.log(userName);
-        if (userName.length > 0 & userName.length > 0 ) {
-            // There are credentials stored. Update the fields.
-            document.getElementById(inputUserName).value = userName;
-            document.getElementById(inputGroupName).value = groupName;
+    // Have a short time out function to be able to load the credentials from memory correctly.
+    setTimeout(function () {
+        var groupName = credentials.groupName;
+        var userName = credentials.userName;
 
-            console.log("WORKING");
+        // Sanity check
+        if (groupName != null && userName != null) {
+            // Checking they are not empty
+            if (userName.length > 0 & userName.length > 0) {
+                // There are credentials stored. Update the fields.
+                document.getElementById(inputUserNameId).value = userName;
+                document.getElementById(inputGroupNameId).value = groupName;
+            }
         }
-   // }
+
+    }, TIMEOUT_LOAD_CREDENTIALS);
 
 }
