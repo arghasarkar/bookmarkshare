@@ -214,11 +214,11 @@ function getCredentialsFromInput() {
 function loadCredentials() {
     var credentials = [];
     chrome.storage.sync.get(keyUserName, function(userName) {
-        credentials[keyUserName] = userName.userName;
+        credentials.userName = userName.userName;
         //console.log(credentials[keyUserName]);
     });
     chrome.storage.sync.get(keyGroupName, function(groupName) {
-        credentials[keyGroupName] = groupName.groupName;
+        credentials.groupName = groupName.groupName;
         //console.log(groupName.groupName)
     });
     console.log(credentials);
@@ -231,17 +231,17 @@ function loadCredentials() {
  */
 function autoJoinChannel() {
     var credentials = loadCredentials();
-    console.log(credentials[keyUserName]);
+    console.log(credentials);
 
-    var groupName = credentials[keyGroupName];
-    var userName = credentials[keyUserName];
+    var groupName = credentials.groupName;
+    var userName = credentials.userName;
     //if (credentials.groupName != null && credentials.userName != null) {
         // Checking they are not empty
-        console.log(userName + " -- " + groupName);
+        console.log(userName);
         if (userName.length > 0 & userName.length > 0 ) {
             // There are credentials stored. Update the fields.
-            document.getElementById(inputUserName).value = credentials.userName;
-            document.getElementById(inputGroupName).value = credentials.groupName;
+            document.getElementById(inputUserName).value = userName;
+            document.getElementById(inputGroupName).value = groupName;
 
             console.log("WORKING");
         }
