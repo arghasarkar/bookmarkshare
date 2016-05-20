@@ -8,7 +8,10 @@
  */
 // URL of the server
 var serverURL = "http://getcouper.com:8000/";
+<<<<<<< HEAD
 var groupPath = "group/join/";
+=======
+>>>>>>> da54622274710b07536367c593557950c15c0095
 // The username and the group name fields
 var inputUserNameId = "nameField";
 var inputGroupNameId = "groupField";
@@ -16,7 +19,11 @@ var inputGroupNameId = "groupField";
 var keyUserName = "userName";
 var keyGroupName = "groupName";
 // The timeout for loading the credentials from chrome's storage API
+<<<<<<< HEAD
 var TIMEOUT_LOAD_CREDENTIALS = 10;
+=======
+var TIMEOUT_LOAD_CREDENTIALS = 100;
+>>>>>>> da54622274710b07536367c593557950c15c0095
 
 // For hiding the button.
 hideButton();
@@ -30,16 +37,31 @@ function hideButton() {
 		/*
 			Code will go here to send request to the server to join the group share
 		 */
+<<<<<<< HEAD
 		var userName = document.getElementById(inputUserNameId).value;
 		var groupName = document.getElementById(inputGroupNameId).value;
+=======
+
+		var username = document.getElementById(inputUserNameId).value;
+		var groupname = document.getElementById(inputGroupNameId).value;
+
+		// Building the query string
+		var queryString = "groupname=" + groupname + "&username=" + username + "&join_status=true";
+
+		var serverResponse = loadTextFileAjaxSync(serverURL + queryString, "text/plain");
+		console.log("Resp: " + serverResponse);
+>>>>>>> da54622274710b07536367c593557950c15c0095
 
 		$("#leaveButton").show();
 		$("#joinButton").hide();
 
         // Updating the credentials
         storeCredentials();
+<<<<<<< HEAD
         // Loading and parsing JSON data
         parseBookmarksJson(groupName);
+=======
+>>>>>>> da54622274710b07536367c593557950c15c0095
 
 		document.getElementById(inputUserNameId).disabled = true;
 		document.getElementById(inputGroupNameId).disabled = true;
@@ -262,5 +284,5 @@ function parseBookmarksJson(groupName) {
     // Loading up the JSON data about the bookmarks
     var jsonData = loadTextFileAjaxSync(serverURL + groupPath + groupName, "application/json");
     console.log("Data" + jsonData);
-    
+
 }
