@@ -8,10 +8,7 @@
  */
 // URL of the server
 var serverURL = "http://getcouper.com:8000/";
-<<<<<<< HEAD
 var groupPath = "group/join/";
-=======
->>>>>>> da54622274710b07536367c593557950c15c0095
 // The username and the group name fields
 var inputUserNameId = "nameField";
 var inputGroupNameId = "groupField";
@@ -19,11 +16,7 @@ var inputGroupNameId = "groupField";
 var keyUserName = "userName";
 var keyGroupName = "groupName";
 // The timeout for loading the credentials from chrome's storage API
-<<<<<<< HEAD
 var TIMEOUT_LOAD_CREDENTIALS = 10;
-=======
-var TIMEOUT_LOAD_CREDENTIALS = 100;
->>>>>>> da54622274710b07536367c593557950c15c0095
 
 // For hiding the button.
 hideButton();
@@ -37,31 +30,16 @@ function hideButton() {
 		/*
 			Code will go here to send request to the server to join the group share
 		 */
-<<<<<<< HEAD
-		var userName = document.getElementById(inputUserNameId).value;
+        var userName = document.getElementById(inputUserNameId).value;
 		var groupName = document.getElementById(inputGroupNameId).value;
-=======
-
-		var username = document.getElementById(inputUserNameId).value;
-		var groupname = document.getElementById(inputGroupNameId).value;
-
-		// Building the query string
-		var queryString = "groupname=" + groupname + "&username=" + username + "&join_status=true";
-
-		var serverResponse = loadTextFileAjaxSync(serverURL + queryString, "text/plain");
-		console.log("Resp: " + serverResponse);
->>>>>>> da54622274710b07536367c593557950c15c0095
 
 		$("#leaveButton").show();
 		$("#joinButton").hide();
 
         // Updating the credentials
         storeCredentials();
-<<<<<<< HEAD
         // Loading and parsing JSON data
         parseBookmarksJson(groupName);
-=======
->>>>>>> da54622274710b07536367c593557950c15c0095
 
 		document.getElementById(inputUserNameId).disabled = true;
 		document.getElementById(inputGroupNameId).disabled = true;
@@ -72,17 +50,13 @@ function hideButton() {
 	$("#leaveButton").click(function() {
 
 		/*
-		 Code will go here to send request to the server to leave the group share
+		 Deletes all the bookmarks, enables the name and channel input field and activates the Join button
 		 */
 
 		var username = document.getElementById(inputUserNameId).value;
 		var groupname = document.getElementById(inputGroupNameId).value;
 
-		// Building the query string
-		var queryString = "groupname=" + groupname + "&username=" + username + "&join_status=false";
-
-		var serverResponse = loadTextFileAjaxSync(serverURL + queryString, "text/plain");
-		console.log("Resp: " + serverResponse);
+		removeAllBookMarks();
 
 		$("#joinButton").show();
 		$("#leaveButton").hide();
@@ -173,7 +147,6 @@ var pusher = new Pusher('a7fdcaa3c67e836a3fcc', {
 
 var channel = pusher.subscribe('test_channel');
 channel.bind('newurl', function(bookMark) {
-	// TODO: Code will go here to update the list of new bookMarks
 	newBookMark(bookMark.title, bookMark.url, bookMark.name);
 });
 
@@ -181,8 +154,10 @@ channel.bind('newurl', function(bookMark) {
  * Adding a new bookmark to the extension list
  */
 function newBookMark(title, url, name) {
-	var table = document.getElementById("bookMarkTable");
-	var row = table.insertRow(1);
+	var tableNode = document.getElementById("bookMarkTable");
+    var tableBody = tableNode.getElementsByTagName('tbody')[0];
+
+    var row = tableBody.insertRow(0);
 
 	var cellNum = row.insertCell(0);
 	var cellSender = row.insertCell(1);
@@ -194,6 +169,29 @@ function newBookMark(title, url, name) {
 	cellURL.appendChild(document.createTextNode(url));
 	cellCPButton.innerHTML = "<button class='btn' data-clipboard-target='#foo'><img src='img/clippy.png' style='width:15px;height:15px;' alt='Copy to clipboard'></button>";
 }
+/**
+ * Remove all bookmarks.
+ */
+function removeAllBookMarks() {
+	var tableNode = document.getElementById("bookMarkTable");
+    var tableBody = tableNode.getElementsByTagName('tbody')[0];
+
+	/*while (tableNode.firstChild) {
+		tableNode.removeChild(tableNode.firstChild);
+	}*/
+
+	var numOfRows = tableBody.rows.length;
+
+	/*var rowCount = 0;
+	for (rowCount = 1; rowCount < numOfRows; rowCount++) {
+		tableNode.deleteRow(rowCount);
+	}*/
+
+    while (numOfRows > 1) {
+        tableBody.removeChild(tableBody.firstChild);
+        numOfRows = tableNode.rows.length;
+    }
+}
 
 /**
  * Store the Name and the Group of the user's bookmark.
@@ -201,7 +199,7 @@ function newBookMark(title, url, name) {
  * This data will be stored when the user join's a new group
  */
 function storeCredentials() {
-    var credentials = getCredentialsFromInput();
+    credentials = getCredentialsFromInput();
     console.log(credentials.groupName + " - " + credentials.userName);
 
     if (credentials.userName && credentials.groupName) {
@@ -273,8 +271,6 @@ function autoJoinChannel() {
         // Press the join button
         document.getElementById("joinButton").click();
 
-        parseBookmarksJson(groupName);
-
     }, TIMEOUT_LOAD_CREDENTIALS);
 }
 /**
@@ -282,7 +278,18 @@ function autoJoinChannel() {
  */
 function parseBookmarksJson(groupName) {
     // Loading up the JSON data about the bookmarks
-    var jsonData = loadTextFileAjaxSync(serverURL + groupPath + groupName, "application/json");
-    console.log("Data" + jsonData);
+    var jsonData = JSON.parse(loadTextFileAjaxSync(serverURL + groupPath + groupName, "application/json"));
+    //console.log("Data" + jsonData);
+
+    var bookmarks = [];
+
+    // Iterates through all the bookmarks
+    for (var bookmark in jsonData) {
+        console.log(bookmark);
+        var title = jsonData[bookmark].title;
+        var url = jsonData[bookmark].url;
+        var name = jsonData[bookmark].name;
+        newBookMark(title, url, name);
+    }
 
 }
