@@ -8,6 +8,7 @@
  */
 // URL of the server
 var serverURL = "http://getcouper.com:8000/";
+var groupPath = "group/join/";
 // The username and the group name fields
 var inputUserNameId = "nameField";
 var inputGroupNameId = "groupField";
@@ -15,7 +16,7 @@ var inputGroupNameId = "groupField";
 var keyUserName = "userName";
 var keyGroupName = "groupName";
 // The timeout for loading the credentials from chrome's storage API
-var TIMEOUT_LOAD_CREDENTIALS = 100;
+var TIMEOUT_LOAD_CREDENTIALS = 10;
 
 // For hiding the button.
 hideButton();
@@ -29,21 +30,16 @@ function hideButton() {
 		/*
 			Code will go here to send request to the server to join the group share
 		 */
-
-		var username = document.getElementById(inputUserNameId).value;
-		var groupname = document.getElementById(inputGroupNameId).value;
-
-		// Building the query string
-		var queryString = "groupname=" + groupname + "&username=" + username + "&join_status=true";
-
-		var serverResponse = loadTextFileAjaxSync(serverURL + queryString, "text/plain");
-		console.log("Resp: " + serverResponse);
+		var userName = document.getElementById(inputUserNameId).value;
+		var groupName = document.getElementById(inputGroupNameId).value;
 
 		$("#leaveButton").show();
 		$("#joinButton").hide();
 
         // Updating the credentials
         storeCredentials();
+        // Loading and parsing JSON data
+        parseBookmarksJson(groupName);
 
 		document.getElementById(inputUserNameId).disabled = true;
 		document.getElementById(inputGroupNameId).disabled = true;
@@ -57,8 +53,8 @@ function hideButton() {
 		 Code will go here to send request to the server to leave the group share
 		 */
 
-		var username = document.getElementById("nameField").value;
-		var groupname = document.getElementById("groupField").value;
+		var username = document.getElementById(inputUserNameId).value;
+		var groupname = document.getElementById(inputGroupNameId).value;
 
 		// Building the query string
 		var queryString = "groupname=" + groupname + "&username=" + username + "&join_status=false";
@@ -82,7 +78,7 @@ function hideButton() {
 	Send a request to the server with the group name and user name
 */
 function loadTextFileAjaxSync(filePath, mimeType) {
-	var xmlhttp=new XMLHttpRequest();
+	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.open("GET",filePath,false);
 	if (mimeType != null) {
 		if (xmlhttp.overrideMimeType) {
@@ -234,10 +230,13 @@ function loadCredentials() {
 function autoJoinChannel() {
     var credentials = loadCredentials();
 
+    var groupName = "";
+    var userName = "";
+
     // Have a short time out function to be able to load the credentials from memory correctly.
     setTimeout(function () {
-        var groupName = credentials.groupName;
-        var userName = credentials.userName;
+        groupName = credentials.groupName;
+        userName = credentials.userName;
 
         // Sanity check
         if (groupName != null && userName != null) {
@@ -249,6 +248,19 @@ function autoJoinChannel() {
             }
         }
 
-    }, TIMEOUT_LOAD_CREDENTIALS);
+        // Press the join button
+        document.getElementById("joinButton").click();
 
+        parseBookmarksJson(groupName);
+
+    }, TIMEOUT_LOAD_CREDENTIALS);
+}
+/**
+ * Loading up JSON data about the Bookmarks from the server.
+ */
+function parseBookmarksJson(groupName) {
+    // Loading up the JSON data about the bookmarks
+    var jsonData = loadTextFileAjaxSync(serverURL + groupPath + groupName, "application/json");
+    console.log("Data" + jsonData);
+    
 }
