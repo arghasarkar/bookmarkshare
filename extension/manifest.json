@@ -15,9 +15,18 @@
     "16": "img/logo-16.png",
     "128": "img/logo-128.png"
   },
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://*.pusher.com; object-src 'self'",
+
   "permissions": [
+
     "contextMenus",
-    "activeTab"
+    "activeTab",
+    "webRequest",
+    "storage",
+
+    "https://*.pusher.com/*",
+    "*://pusher.com/*",
+    "*://*.pusher.com/"
   ],
 
   "content_scripts": [

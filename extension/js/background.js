@@ -1,5 +1,5 @@
 // URL of the backend server
-var serverUrl = "http://b7a902cf.ngrok.io/URLShare/sendurl.php?";
+var serverUrl = "http://getcouper.com:8000/";
 //http://b7a902cf.ngrok.io/URLShare/sendurl.php?groupname=brumhack&username=alex&url=http://facebook.com
 
 chrome.contextMenus.create({
