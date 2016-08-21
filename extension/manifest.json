@@ -17,17 +17,19 @@
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://*.pusher.com; object-src 'self'",
 
-  "permissions": [
+    "permissions": [
 
-    "contextMenus",
-    "activeTab",
-    "webRequest",
-    "storage",
+        "contextMenus",
+        "activeTab",
+        "webRequest",
+        "storage",
 
-    "https://*.pusher.com/*",
-    "*://pusher.com/*",
-    "*://*.pusher.com/"
-  ],
+        "https://*.pusher.com/*",
+        "*://pusher.com/*",
+        "*://*.pusher.com/",
+
+        "http://getcouper.com:8000/*"
+    ],
 
   "content_scripts": [
     {

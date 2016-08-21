@@ -14,32 +14,49 @@ var inputUserNameId = "nameField";
 var inputGroupNameId = "groupField";
 // The associative key for userName and groupField
 var keyUserName = "userName";
-var keyGroupName = "groupName";
+var keyGroupName = "userGroup";
 // The timeout for loading the credentials from chrome's storage API
 var TIMEOUT_LOAD_CREDENTIALS = 10;
 
-// For hiding the button.
-hideButton();
+// Types of messages
+var MESSAGE_TYPE_USER_AND_GROUP_UPDATE = "userAndGroupUpdate";
+
+
+// Initialises the tasks that happens when the user joins or leaves a group.
+handleJoinOrLeaveGroup();
 // Activating the message passing listener
 mp();
 
-function hideButton() {
+function handleJoinOrLeaveGroup() {
 	$("#leaveButton").hide();
+
 	$("#joinButton").click(function() {
-
-		/*
-			Code will go here to send request to the server to join the group share
-		 */
+        /**
+         * The user has just joined a new group.
+         * 1) Get the user's group and name.
+         * 2) Use messaging API to update the information in the background script.
+         * 3) Hide the Join button and show the leave button.
+         * 4) Lock the group and name text input fields.
+         */
         var userName = document.getElementById(inputUserNameId).value;
-		var groupName = document.getElementById(inputGroupNameId).value;
+		var userGroup = document.getElementById(inputGroupNameId).value;
 
-		$("#leaveButton").show();
+        // Create a JSON object with the data about the new group to send to the background script.
+        var userDetailsJson = {
+            type: MESSAGE_TYPE_USER_AND_GROUP_UPDATE,
+            userName: userName,
+            userGroup: userGroup
+        };
+
+        chrome.runtime.sendMessage(userDetailsJson, function(response) { });
+
+        $("#leaveButton").show();
 		$("#joinButton").hide();
 
-        // Updating the credentials
+        // Updating the userGroup and userName on the storage API
         storeCredentials();
-        // Loading and parsing JSON data
-        parseBookmarksJson(groupName);
+        // Loading and parsing JSON data about the bookmarks for this particular group
+        parseBookmarksJson(userGroup);
 
 		document.getElementById(inputUserNameId).disabled = true;
 		document.getElementById(inputGroupNameId).disabled = true;
@@ -48,24 +65,34 @@ function hideButton() {
 
 
 	$("#leaveButton").click(function() {
+        /**
+         * The user has just left a group.
+         * 1) Use the messaging API to update the userGroup and userName to empty string.
+         * 2) Remove all bookmarks / Create an empty table of bookmarks.
+         * 3) Hide the Leave button and show the Join button.
+         * 4) Unlock the group and name text input fields.
+         */
+		var userName = document.getElementById(inputUserNameId).value;
+		var userGroup = document.getElementById(inputGroupNameId).value;
 
-		/*
-		 Deletes all the bookmarks, enables the name and channel input field and activates the Join button
-		 */
+        var userDetailsJson = {
+            type: MESSAGE_TYPE_USER_AND_GROUP_UPDATE,
+            userName: "",
+            userGroup: ""
+        };
 
-		var username = document.getElementById(inputUserNameId).value;
-		var groupname = document.getElementById(inputGroupNameId).value;
+        chrome.runtime.sendMessage(userDetailsJson, function(response) { });
 
-		removeAllBookMarks();
+        removeAllBookMarks();
 
 		$("#joinButton").show();
 		$("#leaveButton").hide();
+
 		document.getElementById(inputUserNameId).disabled = false;
 		document.getElementById(inputGroupNameId).disabled = false;
-
 	});
 
-    // Checking if a value has been set already.
+    // Automatically join a channel if there are stored credentials.
     autoJoinChannel();
 }
 
@@ -106,17 +133,16 @@ function mp() {
 		function(request, sender, sendResponse) {
 
 			if (request.getNames) {
-				var username = document.getElementById("nameField").value;
-				var groupname = document.getElementById("groupField").value;
+				var userName = document.getElementById("nameField").value;
+				var userGroup = document.getElementById("groupField").value;
 
-				var responseString = "groupname=" + groupname + "&username=" + username;
+				var responseString = "groupname=" + userGroup + "&username=" + userName;
 				console.log("GROUP DETAILS: " + responseString);
 				sendResponse({nameDetails: responseString});
 
 			}
 		}
 	);
-
 }
 
 /**
@@ -139,7 +165,6 @@ function copyToClipboard() {
 /**
  * Using the Pusher API to provide realtime updates
  */
-
 var pusher = new Pusher('a7fdcaa3c67e836a3fcc', {
 	cluster: 'eu',
 	encrypted: true
@@ -161,12 +186,15 @@ function newBookMark(title, url, name) {
 
 	var cellNum = row.insertCell(0);
 	var cellSender = row.insertCell(1);
-	var cellURL = row.insertCell(2);
+	var cellBookmark = row.insertCell(2);
 	var cellCPButton = row.insertCell(3);
 
-	cellNum.innerHTML = "X";
+	cellNum.appendChild(document.createTextNode("X"));
 	cellSender.appendChild(document.createTextNode(name));
-	cellURL.appendChild(document.createTextNode(url));
+
+	cellBookmark.appendChild(createBookmarkLink(title, url));
+    cellBookmark.classList.add("tdBookmark");
+
 	cellCPButton.innerHTML = "<button class='btn' data-clipboard-target='#foo'><img src='img/clippy.png' style='width:15px;height:15px;' alt='Copy to clipboard'></button>";
 }
 /**
@@ -176,21 +204,31 @@ function removeAllBookMarks() {
 	var tableNode = document.getElementById("bookMarkTable");
     var tableBody = tableNode.getElementsByTagName('tbody')[0];
 
-	/*while (tableNode.firstChild) {
-		tableNode.removeChild(tableNode.firstChild);
-	}*/
-
 	var numOfRows = tableBody.rows.length;
-
-	/*var rowCount = 0;
-	for (rowCount = 1; rowCount < numOfRows; rowCount++) {
-		tableNode.deleteRow(rowCount);
-	}*/
 
     while (numOfRows > 1) {
         tableBody.removeChild(tableBody.firstChild);
         numOfRows = tableNode.rows.length;
     }
+}
+
+/**
+ * Creates a HTML link element given the URL of the bookmark.
+ * @param bookmarkUrl: URL of the bookmark
+ * @returns {Element}: Link element
+ */
+function createBookmarkLink(bookmarkTitle, bookmarkUrl) {
+    var MAX_URL_LENGTH = 53;
+    if (bookmarkTitle.length > MAX_URL_LENGTH) {
+        bookmarkTitle = bookmarkTitle.substr(0, MAX_URL_LENGTH) + "...";
+    }
+    var linkElement = document.createElement("a");
+    linkElement.appendChild(document.createTextNode(bookmarkTitle));
+    linkElement.title = bookmarkUrl;
+    linkElement.href =  bookmarkUrl;
+    linkElement.target = "_blank";
+
+    return linkElement;
 }
 
 /**
@@ -200,19 +238,18 @@ function removeAllBookMarks() {
  */
 function storeCredentials() {
     credentials = getCredentialsFromInput();
-    console.log(credentials.groupName + " - " + credentials.userName);
+    console.log(credentials.userGroup + " - " + credentials.userName);
 
-    if (credentials.userName && credentials.groupName) {
+    if (credentials.userName && credentials.userGroup) {
         chrome.storage.sync.set({"userName" : credentials.userName}, function() {
             console.log("The username has been saved.\n" + credentials.userName);
         });
-        chrome.storage.sync.set({"groupName" : credentials.groupName}, function() {
-            console.log("The groupname has been saved. \n" + credentials.groupName);
+        chrome.storage.sync.set({"userGroup" : credentials.userGroup}, function() {
+            console.log("The user's group name has been saved. \n" + credentials.userGroup);
         });
     } else {
         console.log("Invalid group or user name");
     }
-
 }
 /**
  * Gets the user's Name and the Group's name from the user <input>
@@ -221,7 +258,7 @@ function getCredentialsFromInput() {
     var credentials = [];
 
     credentials.userName = document.getElementById(inputUserNameId).value;
-    credentials.groupName = document.getElementById(inputGroupNameId).value;
+    credentials.userGroup = document.getElementById(inputGroupNameId).value;
 
     return credentials;
 }
@@ -235,8 +272,8 @@ function loadCredentials() {
         credentials.userName = userName.userName;
         //console.log(credentials[keyUserName]);
     });
-    chrome.storage.sync.get(keyGroupName, function(groupName) {
-        credentials.groupName = groupName.groupName;
+    chrome.storage.sync.get(keyGroupName, function(userGroup) {
+        credentials.userGroup = userGroup.userGroup;
         //console.log(groupName.groupName)
     });
 
@@ -250,21 +287,21 @@ function loadCredentials() {
 function autoJoinChannel() {
     var credentials = loadCredentials();
 
-    var groupName = "";
+    var userGroup = "";
     var userName = "";
 
     // Have a short time out function to be able to load the credentials from memory correctly.
     setTimeout(function () {
-        groupName = credentials.groupName;
+        userGroup = credentials.userGroup;
         userName = credentials.userName;
 
         // Sanity check
-        if (groupName != null && userName != null) {
+        if (userGroup != null && userName != null) {
             // Checking they are not empty
             if (userName.length > 0 & userName.length > 0) {
                 // There are credentials stored. Update the fields.
                 document.getElementById(inputUserNameId).value = userName;
-                document.getElementById(inputGroupNameId).value = groupName;
+                document.getElementById(inputGroupNameId).value = userGroup;
             }
         }
 
@@ -276,9 +313,9 @@ function autoJoinChannel() {
 /**
  * Loading up JSON data about the Bookmarks from the server.
  */
-function parseBookmarksJson(groupName) {
+function parseBookmarksJson(userGroup) {
     // Loading up the JSON data about the bookmarks
-    var jsonData = JSON.parse(loadTextFileAjaxSync(serverURL + groupPath + groupName, "application/json"));
+    var jsonData = JSON.parse(loadTextFileAjaxSync(serverURL + groupPath + userGroup, "application/json"));
     //console.log("Data" + jsonData);
 
     var bookmarks = [];
@@ -291,5 +328,4 @@ function parseBookmarksJson(groupName) {
         var name = jsonData[bookmark].name;
         newBookMark(title, url, name);
     }
-
 }

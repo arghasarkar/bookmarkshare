@@ -1,3 +1,11 @@
+/**
+ * Created by arghasarkar on 12/03/2016.
+ */
+
+// URL of the server
+var serverUrl = "http://getcouper.com:8000/";
+var setBookmarkPath = serverUrl + "bookmark/set/";
+
 // Runs the Message Passing
 mp();
 
@@ -11,22 +19,24 @@ function getCurrentURL() {
 
 function mp() {
     /*
-        1) Would listen for a request to send a link.
+        1) Would listen for a request to send a link and title.
         2) Would reply to the current URL of the page the user is on.
      */
 
     chrome.runtime.onMessage.addListener(
         /*
-        Work will be down here. 
+        Work will be down here.
          */
         function(request, sender, sendResponse) {
 
             if (request.getURL) {
-                var currentURL = getCurrentURL();
-                console.log("URL: " + currentURL);
-                sendResponse({currentURL: currentURL});
+                var urlJson = {
+                    url: getCurrentURL(),
+                    title: document.title
+                };
+
+                sendResponse(urlJson);
             }
         }
     );
-
 }
