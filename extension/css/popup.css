@@ -1,8 +1,18 @@
 body {
     padding: 15px 15px 15px 15px;
     height: 500px;
-    width: 517px;
+    width: 600px;
+
+    overflow-x: scroll;
 }
+
+td.tdBookmark {
+    min-width: 300px;
+    max-width: 300px;
+
+    overflow-x: hidden;
+}
+
 #inout-username, #input-groupname {
 	padding-top: 15px;
 	padding-bottom: 15px;

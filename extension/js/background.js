@@ -1,11 +1,22 @@
+/**
+ * Created by arghasarkar on 12/03/2016.
+ */
+
 // URL of the backend server
 var serverUrl = "http://getcouper.com:8000/";
-//http://b7a902cf.ngrok.io/URLShare/sendurl.php?groupname=brumhack&username=alex&url=http://facebook.com
+var setBookmarkPath = serverUrl + "bookmark/set/";
+
+// Details about the user's name and group
+var userName = "";
+var userGroup = "";
+
+// Types of messages
+var MESSAGE_TYPE_USER_AND_GROUP_UPDATE = "userAndGroupUpdate";
 
 chrome.contextMenus.create({
     'title': 'Share this URL',
     'contexts': ['all'],
-    'onclick': onClickShareLinkHandler
+    'onclick': onClickShareUrlHandler
 });
 
 function sendRequest(path, params, method) {
@@ -33,37 +44,36 @@ function sendRequest(path, params, method) {
     form.submit();
 }
 
-function sendGetRequest(path) {
+/**
+ * Sends GET request to the server
+ * @param serverUrl
+ */
+function sendGetRequest(serverUrl) {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", path, true);
+    xhttp.open("GET", serverUrl, true);
     xhttp.send();
 }
 
-function onClickShareLinkHandler(info) {
+function onClickShareUrlHandler() {
     /**
      *  Code will go here for sending a request to the backend server containing the URL.
      */
     // Sending message to the content script
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+
         chrome.tabs.sendMessage(tabs[0].id, {getURL: "true"}, function (response) {
-
-            /*
-                CODE WILL GO HERE TO GET THE GROUP NAME AND THE USER NAME
-             */
-            var queryString = "";
-            chrome.extension.sendMessage({getNames: "true"}, function (responseString) {
-                queryString = responseString;
-            });
-            /*
-             The DETAILS has been received. Time to send a request to the database.
-             */
-            var newRequestUrl = serverUrl + "groupname=brumhack&username=alexTest&url=http://facebook.com";
-            //var newRequestUrl = serverUrl + queryString;
-            console.log("ResponseQ: " + newRequestUrl);
+            var newRequestUrl = setBookmarkPath + "?group=" + userGroup + "&title=" + response.title + "&name=" + userName + "&url=" + response.url;
             sendGetRequest(newRequestUrl);
-
-
         });
+
     });
 }
 
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if (request.type == MESSAGE_TYPE_USER_AND_GROUP_UPDATE) {
+            userGroup = request.userGroup;
+            userName = request.userName;
+        }
+    }
+);
