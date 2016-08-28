@@ -6,14 +6,45 @@ body {
     overflow-x: scroll;
 }
 
-td.tdBookmark {
+.bookmarkLink {
     min-width: 300px;
     max-width: 300px;
 
     overflow-x: hidden;
+
+    vertical-align: middle;
+}
+
+.table>tbody>tr>td {
+    vertical-align: middle;
 }
 
 #inout-username, #input-groupname {
 	padding-top: 15px;
 	padding-bottom: 15px;
+}
+
+.divDelBookmark {
+    padding: 2px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #e7e7e7;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;
+}
+.divDelBookmark:hover {
+    background-color: #cccccc;
+}
+.divDelBookmark:active {
+    font-size: 12px;
+    padding-top: 3px;
+    padding-bottom: 4px;
+    background-color: #adadad;
 }

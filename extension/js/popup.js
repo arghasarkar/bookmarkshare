@@ -9,12 +9,24 @@
 // URL of the server
 var serverURL = "http://getcouper.com:8000/";
 var groupPath = "group/join/";
+var bookmarkDeletePath = serverURL + "bookmark/del/";
+
 // The username and the group name fields
 var inputUserNameId = "nameField";
 var inputGroupNameId = "groupField";
+
 // The associative key for userName and groupField
 var keyUserName = "userName";
 var keyGroupName = "userGroup";
+
+// Prefix and Postfix constant
+var BOOKMARK_ROW_ID_PRE = "bookmarkRow";
+var BOOKMARK_TABLE_ID = "bookMarkTable";
+var BOOKMARK_DELETE_LINK_CLASS = "divDelBookmark";
+var BOOKMARK_ROW_CLASS = "bookmarkRow";
+var BOOKMARK_LINK_CLASS = "bookmarkLink";
+
+
 // The timeout for loading the credentials from chrome's storage API
 var TIMEOUT_LOAD_CREDENTIALS = 10;
 
@@ -137,9 +149,7 @@ function mp() {
 				var userGroup = document.getElementById("groupField").value;
 
 				var responseString = "groupname=" + userGroup + "&username=" + userName;
-				console.log("GROUP DETAILS: " + responseString);
 				sendResponse({nameDetails: responseString});
-
 			}
 		}
 	);
@@ -165,6 +175,8 @@ function copyToClipboard() {
 /**
  * Using the Pusher API to provide realtime updates
  */
+Pusher.logToConsole = true;
+
 var pusher = new Pusher('a7fdcaa3c67e836a3fcc', {
 	cluster: 'eu',
 	encrypted: true
@@ -178,22 +190,24 @@ channel.bind('newurl', function(bookMark) {
 /**
  * Adding a new bookmark to the extension list
  */
-function newBookMark(title, url, name) {
-	var tableNode = document.getElementById("bookMarkTable");
+function newBookMark(id, title, url, name) {
+	var tableNode = document.getElementById(BOOKMARK_TABLE_ID);
     var tableBody = tableNode.getElementsByTagName('tbody')[0];
 
     var row = tableBody.insertRow(0);
+    row.classList.add(BOOKMARK_ROW_CLASS);
+    row.id = BOOKMARK_ROW_ID_PRE + id;
 
 	var cellNum = row.insertCell(0);
 	var cellSender = row.insertCell(1);
 	var cellBookmark = row.insertCell(2);
 	var cellCPButton = row.insertCell(3);
 
-	cellNum.appendChild(document.createTextNode("X"));
+	cellNum.appendChild(createDeleteBookmarkLink(id));
 	cellSender.appendChild(document.createTextNode(name));
 
 	cellBookmark.appendChild(createBookmarkLink(title, url));
-    cellBookmark.classList.add("tdBookmark");
+    cellBookmark.classList.add(BOOKMARK_LINK_CLASS);
 
 	cellCPButton.innerHTML = "<button class='btn' data-clipboard-target='#foo'><img src='img/clippy.png' style='width:15px;height:15px;' alt='Copy to clipboard'></button>";
 }
@@ -201,7 +215,7 @@ function newBookMark(title, url, name) {
  * Remove all bookmarks.
  */
 function removeAllBookMarks() {
-	var tableNode = document.getElementById("bookMarkTable");
+	var tableNode = document.getElementById(BOOKMARK_TABLE_ID);
     var tableBody = tableNode.getElementsByTagName('tbody')[0];
 
 	var numOfRows = tableBody.rows.length;
@@ -219,16 +233,41 @@ function removeAllBookMarks() {
  */
 function createBookmarkLink(bookmarkTitle, bookmarkUrl) {
     var MAX_URL_LENGTH = 53;
+    var shortTitle = bookmarkTitle;
     if (bookmarkTitle.length > MAX_URL_LENGTH) {
-        bookmarkTitle = bookmarkTitle.substr(0, MAX_URL_LENGTH) + "...";
+        shortTitle = bookmarkTitle.substr(0, MAX_URL_LENGTH) + "...";
     }
     var linkElement = document.createElement("a");
-    linkElement.appendChild(document.createTextNode(bookmarkTitle));
-    linkElement.title = bookmarkUrl;
+    linkElement.appendChild(document.createTextNode(shortTitle));
+    linkElement.title = bookmarkTitle + " - " + bookmarkUrl;
     linkElement.href =  bookmarkUrl;
     linkElement.target = "_blank";
 
     return linkElement;
+}
+/**
+ * Creates a Div element given the BookmarkID (db) and the title. Returns a div which can be clicked to delete the bookmark
+ * @param bookmarkId
+ * @param bookmarkTitle
+ * @returns {Element}: The div element which will act as the button for deleting the bookmark
+ */
+function createDeleteBookmarkLink(bookmarkId) {
+    if (bookmarkId > 0) {
+        var delBookmarkElement = document.createElement("div");
+        delBookmarkElement.appendChild(document.createTextNode("X"));
+        delBookmarkElement.classList.add(BOOKMARK_DELETE_LINK_CLASS);
+        delBookmarkElement.onclick = function() { deleteBookmark(bookmarkId); }
+
+        return delBookmarkElement;
+    }
+}
+function deleteBookmark(bookmarkId) {
+    var bookmarkRow = document.getElementById(BOOKMARK_ROW_ID_PRE + bookmarkId);
+
+    var response = loadTextFileAjaxSync(bookmarkDeletePath + bookmarkId, null);
+    if (response != null) {
+        bookmarkRow.parentNode.removeChild(bookmarkRow);
+    }
 }
 
 /**
@@ -238,18 +277,13 @@ function createBookmarkLink(bookmarkTitle, bookmarkUrl) {
  */
 function storeCredentials() {
     credentials = getCredentialsFromInput();
-    console.log(credentials.userGroup + " - " + credentials.userName);
 
     if (credentials.userName && credentials.userGroup) {
         chrome.storage.sync.set({"userName" : credentials.userName}, function() {
-            console.log("The username has been saved.\n" + credentials.userName);
         });
         chrome.storage.sync.set({"userGroup" : credentials.userGroup}, function() {
-            console.log("The user's group name has been saved. \n" + credentials.userGroup);
         });
-    } else {
-        console.log("Invalid group or user name");
-    }
+    } else { }
 }
 /**
  * Gets the user's Name and the Group's name from the user <input>
@@ -270,11 +304,9 @@ function loadCredentials() {
     var credentials = [];
     chrome.storage.sync.get(keyUserName, function(userName) {
         credentials.userName = userName.userName;
-        //console.log(credentials[keyUserName]);
     });
     chrome.storage.sync.get(keyGroupName, function(userGroup) {
         credentials.userGroup = userGroup.userGroup;
-        //console.log(groupName.groupName)
     });
 
     return credentials;
@@ -316,16 +348,15 @@ function autoJoinChannel() {
 function parseBookmarksJson(userGroup) {
     // Loading up the JSON data about the bookmarks
     var jsonData = JSON.parse(loadTextFileAjaxSync(serverURL + groupPath + userGroup, "application/json"));
-    //console.log("Data" + jsonData);
 
     var bookmarks = [];
 
     // Iterates through all the bookmarks
     for (var bookmark in jsonData) {
-        console.log(bookmark);
         var title = jsonData[bookmark].title;
         var url = jsonData[bookmark].url;
         var name = jsonData[bookmark].name;
-        newBookMark(title, url, name);
+        var id = jsonData[bookmark].id;
+        newBookMark(id, title, url, name);
     }
 }
