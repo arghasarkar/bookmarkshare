@@ -101,12 +101,18 @@ If the Group does not exist, then an error is returned.
 To create the Bookmark, send a **GET** request to `/bookmark/set/` with 
 the following parameters in the ___query string___:
 
-* ____'group', 'name' and 'url'  keys` 
-* __Group__: The Group this Bookmark belongs to
-* __Name:__: The creator of the Bookmark. This is the field called *Name* in the Chrome extension
+* __'Title', 'Group', 'Name' and 'URL'__
+* __Group__: The Group with which the Bookmark has been shared
+* __Name__: The creator of the Bookmark. This is the field called *Name* in the Chrome extension
 * __Title__: The Title of the web page being Bookmarked
-* __URL__: The URL of the link being Bookmarked
+* __URL__: The URL of the web page being Bookmarked
 
+Example: `/bookmark/set/?group=Social&name=Argha&title=Facebook&url=https://facebook.com`
+
+### Removing a new Bookmark
+
+To remove a Bookmark, send a **GET** request to `/bookmark/del/{bookmark_id}`. If the Bookmark has NOT 
+been deleted successfully, then an error is returned. 
 
 # Contribution
 

@@ -72,4 +72,9 @@ class BookmarksController extends Controller
         return Group::whereName($groupName)->get()->first()->id;
     }
 
+    public function deleteBookmarkById($bookmark_id) {
+        try {
+            Bookmark::find($bookmark_id)->delete();
+        } catch (\Exception $e) { }
+    }
 }

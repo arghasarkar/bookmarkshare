@@ -21,6 +21,7 @@ Route::get('/bookmark/get/id/{bookmark_id}', 'BookmarksController@getBookmarkByI
 Route::get('/bookmark/get/groupid/{group_id}', 'BookmarksController@getBookmarksByGroupId');
 Route::get('/bookmark/get/groupname/{group_name}', 'BookmarksController@getBookmarksByGroupName');
 Route::get('/bookmark/set/', 'BookmarksController@store');
+Route::get('/bookmark/del/{bookmark_id}', 'BookmarksController@deleteBookmarkById');
 
 /*
 |--------------------------------------------------------------------------
