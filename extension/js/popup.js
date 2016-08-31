@@ -95,7 +95,9 @@ function handleJoinOrLeaveGroup() {
 
         chrome.runtime.sendMessage(userDetailsJson, function(response) { });
 
-        removeAllBookMarks();
+        try {
+            removeAllBookMarks();
+        } catch ($e) { }
 
 		$("#joinButton").show();
 		$("#leaveButton").hide();
@@ -217,10 +219,9 @@ function newBookMark(id, title, url, name) {
 function removeAllBookMarks() {
 	var tableNode = document.getElementById(BOOKMARK_TABLE_ID);
     var tableBody = tableNode.getElementsByTagName('tbody')[0];
-
 	var numOfRows = tableBody.rows.length;
 
-    while (numOfRows > 1) {
+    while (numOfRows > 0) {
         tableBody.removeChild(tableBody.firstChild);
         numOfRows = tableNode.rows.length;
     }
