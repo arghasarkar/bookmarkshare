@@ -160,11 +160,9 @@ function mp() {
 /**
  * Provides the Copy To Clipboard functionality
  */
-/*
 copyToClipboard();
 function copyToClipboard() {
-
-	var clipboard = new Clipboard('.btn');
+	clipboard = new Clipboard('.btn');
 	clipboard.on('success', function(e) {
 		console.log(e);
 	});
@@ -172,7 +170,6 @@ function copyToClipboard() {
 		console.log(e);
 	});
 }
-*/
 
 /**
  * Using the Pusher API to provide realtime updates
@@ -211,7 +208,7 @@ function newBookMark(id, title, url, name) {
 	cellBookmark.appendChild(createBookmarkLink(title, url));
     cellBookmark.classList.add(BOOKMARK_LINK_CLASS);
 
-	cellCPButton.innerHTML = "<button class='btn' data-clipboard-target='#foo'><img src='img/clippy.png' style='width:15px;height:15px;' alt='Copy to clipboard'></button>";
+	cellCPButton.innerHTML = "<button class='btn' data-clipboard-text='" + url + "'><img src='img/clippy.png' style='width:15px;height:15px;' alt='Copy to clipboard'></button>";
 }
 /**
  * Remove all bookmarks.
