@@ -6,6 +6,37 @@ body {
     overflow-x: scroll;
 }
 
+.popupTitle {
+    text-align: center;
+    width: 350px;
+    float: right;
+    margin-top: -60px;
+}
+#popupTitle {
+    font-style: italic;
+    font-weight: bold;
+}
+
+.btnJoinLeaveHolder {
+    float: right;
+    margin-right: -190px;
+    margin-top: 15px;
+}
+
+.btnJoinLeave {
+    width: 80px;
+}
+
+.tableTitle {
+    margin-top: -10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#BookmarksTitle {
+    font-weight: bold;
+}
+
 .bookmarkLink {
     min-width: 300px;
     max-width: 300px;
