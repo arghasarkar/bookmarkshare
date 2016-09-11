@@ -1,9 +1,9 @@
 {
-  "name": "URL Share",
-  "version": "1.0",
-  "manifest_version": 3,
+  "name": "Bookmarks Share",
+  "version": "1.0.0.1",
+  "manifest_version": 2,
   "options_page": "options.html",
-  "description": "The best way to share URLs online!",
+  "description": "The best way to share Bookmarks with your friends and colleagues!",
   "browser_action": {
     "default_icon": {
       "19": "img/logo-16.png",
