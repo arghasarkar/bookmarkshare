@@ -3,7 +3,7 @@
  */
 
 // URL of the backend server
-var serverUrl = "http://getcouper.com:8000/";
+var serverUrl = "http://getcouper.com:8000/api/";
 var setBookmarkPath = serverUrl + "bookmark/set/";
 
 // Details about the user's name and group

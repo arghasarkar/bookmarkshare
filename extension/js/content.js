@@ -3,7 +3,7 @@
  */
 
 // URL of the server
-var serverUrl = "http://getcouper.com:8000/";
+var serverUrl = "http://getcouper.com:8000/api/";
 var setBookmarkPath = serverUrl + "bookmark/set/";
 
 // Runs the Message Passing
