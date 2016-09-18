@@ -15,13 +15,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/group/join/{group_name}', 'GroupsController@join');
+Route::get('/api/group/join/{group_name}', 'GroupsController@join');
 
-Route::get('/bookmark/get/id/{bookmark_id}', 'BookmarksController@getBookmarkById');
-Route::get('/bookmark/get/groupid/{group_id}', 'BookmarksController@getBookmarksByGroupId');
-Route::get('/bookmark/get/groupname/{group_name}', 'BookmarksController@getBookmarksByGroupName');
-Route::get('/bookmark/set/', 'BookmarksController@store');
-Route::get('/bookmark/del/{bookmark_id}', 'BookmarksController@deleteBookmarkById');
+Route::get('/api/bookmark/get/id/{bookmark_id}', 'BookmarksController@getBookmarkById');
+Route::get('/api/bookmark/get/groupid/{group_id}', 'BookmarksController@getBookmarksByGroupId');
+Route::get('/api/bookmark/get/groupname/{group_name}', 'BookmarksController@getBookmarksByGroupName');
+Route::get('/api/bookmark/set/', 'BookmarksController@store');
+Route::get('/api/bookmark/del/{bookmark_id}', 'BookmarksController@deleteBookmarkById');
 
 /*
 |--------------------------------------------------------------------------

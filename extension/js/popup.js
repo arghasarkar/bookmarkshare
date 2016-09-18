@@ -7,7 +7,7 @@
  * Global variables and constants are stored here.
  */
 // URL of the server
-var serverURL = "http://getcouper.com:8000/";
+var serverURL = "http://getcouper.com:8000/api/";
 var groupPath = "group/join/";
 var bookmarkDeletePath = serverURL + "bookmark/del/";
 
