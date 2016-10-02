@@ -12,7 +12,10 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
+});
+Route::get('/*', function () {
+    return view('index');
 });
 
 Route::get('/api/group/join/{group_name}', 'GroupsController@join');
