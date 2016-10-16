@@ -13,5 +13,14 @@ class HUser extends Model
         'email',
         'about'
     ];
+
+    public function skills() {
+        return $this->belongsToMany(
+            '\App\Skill',
+            'h_user_skill',
+            'h_user_id',
+            'skill_id'
+        );
+    }
     
 }
