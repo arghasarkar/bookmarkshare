@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/jh/users/', 'HUserController@showAll');
+
 Route::get('/api/group/join/{group_name}', 'GroupsController@join');
 
 Route::get('/api/bookmark/get/id/{bookmark_id}', 'BookmarksController@getBookmarkById');
