@@ -14,6 +14,9 @@ class CreateHUsersTable extends Migration
     {
         Schema::create('h_users', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
+            $table->string('email');
+            $table->string('mob');
             $table->timestamps();
         });
     }
