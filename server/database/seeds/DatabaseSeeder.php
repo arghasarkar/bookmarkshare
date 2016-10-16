@@ -47,5 +47,38 @@ class HUserTableSeeder extends Seeder
             "mob" => ""
         ]);
     }
-    
+
+}
+
+class SkillTableSeeder extends Seeder {
+
+    public function run() {
+
+        Skill::create([
+            "name" => "Java",
+            "description" => "Java programming language."
+        ]);
+
+        Skill::create([
+            "name" => "Front-end web developer",
+            "description" => "Front end web developer"
+        ]);
+
+        Skill::create([
+            "name" => "OpenCV",
+            "description" => "Computer vision library primarily in C++"
+        ]);
+
+        Skill::create([
+            "name" => "ReactJS",
+            "description" => "Javascript library"
+        ]);
+
+        Skill::create([
+            "name" => "Python",
+            "description" => "Python programming language"
+        ]);
+
+    }
+
 }
