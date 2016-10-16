@@ -10,14 +10,14 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Mockery\CountValidator\Exception;
 
-class HUserController extends Controller
+class SkillController extends Controller
 {
 
     public function showAll() {
         try {
-            $users = HUser::all();
-            return $users;
+            $skills = Skill::all();
+            return $skills;
         } catch (Exception $e) { }
     }
-
+    
 }

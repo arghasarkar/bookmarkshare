@@ -17,6 +17,7 @@ class CreateHUsersTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('mob');
+            $table->string('about');
             $table->timestamps();
         });
     }

@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/jh/users/', 'HUserController@showAll');
+Route::get('/jh/skills/', 'SkillControler@showAll');
 
 Route::get('/api/group/join/{group_name}', 'GroupsController@join');
 

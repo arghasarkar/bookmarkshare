@@ -29,25 +29,29 @@ class HUserTableSeeder extends Seeder
         HUser::create([
             "name" => "Argha",
             "email" => "argha@arghasarkar.co.uk",
-            "mob" => "+447554164303"
+            "mob" => "+447554164303",
+            "about" => "This is my first time in Germany and I want to contribute as a full stack developer"
         ]);
 
         HUser::create([
             "name" => "Adam",
             "email" => "adam@example.com",
-            "mob" => ""
+            "mob" => "",
+            "about" => "Front-end developer. Hidden message in the background"
         ]);
 
         HUser::create([
             "name" => "Gisi",
             "email" => "gisi@example.com",
-            "mob" => ""
+            "mob" => "",
+            "about" => "C++ developer using Linux mint"
         ]);
 
         HUser::create([
             "name" => "Fernando",
             "email" => "fernando@example.com",
-            "mob" => ""
+            "mob" => "",
+            "about" => "Worked on unreal"
         ]);
     }
 

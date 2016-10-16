@@ -10,7 +10,8 @@ class HUser extends Model
     protected $fillable = [
         'name',
         'mob',
-        'email'
+        'email',
+        'about'
     ];
     
 }
