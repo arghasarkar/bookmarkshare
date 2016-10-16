@@ -12,7 +12,12 @@ class PivotTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('h_user_skill', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer("h_user_id");
+            $table->string("skill_id");
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +27,6 @@ class PivotTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('h_user_skill');
     }
 }
