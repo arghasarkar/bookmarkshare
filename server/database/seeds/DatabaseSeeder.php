@@ -21,8 +21,6 @@ class DatabaseSeeder extends Seeder
 class HUserTableSeeder extends Seeder
 {
     public function run() {
-        DB::table('h_users')->delete();
-
         HUser::create([
             "name" => "Argha",
             "email" => "argha@arghasarkar.co.uk",
